@@ -32,7 +32,6 @@ import com.android.jack.ir.ast.JPackage;
 import com.android.jack.ir.ast.JSession;
 import com.android.jack.ir.ast.JType;
 import com.android.jack.ir.ast.JVisitor;
-import com.android.jack.ir.sourceinfo.SourceInfo;
 import com.android.jack.library.DumpInLibrary;
 import com.android.jack.reporting.Reportable.ProblemLevel;
 import com.android.jack.reporting.Reporter.Severity;
@@ -55,8 +54,6 @@ import com.android.sched.util.config.HasKeyId;
 import com.android.sched.util.config.ThreadConfig;
 import com.android.sched.util.config.id.BooleanPropertyId;
 import com.android.sched.util.config.id.PropertyId;
-import com.android.sched.util.location.ColumnAndLineLocation;
-import com.android.sched.util.location.FileLocation;
 
 import java.io.File;
 import java.util.Collection;
@@ -257,15 +254,12 @@ public class Renamer implements RunnableSchedulable<JSession> {
                 }
               } while (foundName);
             } catch (MaskedHierarchy e) {
-              SourceInfo sourceInfo = field.getSourceInfo();
               Jack.getSession()
                   .getReporter()
                   .report(
                       Severity.NON_FATAL,
                       new ObfuscationContextInfo(
-                          new ColumnAndLineLocation(
-                              new FileLocation(sourceInfo.getFileName()),
-                              sourceInfo.getStartLine()),
+                          field.getSourceInfo().getLocation(),
                           ProblemLevel.INFO,
                           e));
             }
@@ -290,15 +284,12 @@ public class Renamer implements RunnableSchedulable<JSession> {
                 }
               } while (foundName);
             } catch (MaskedHierarchy e) {
-              SourceInfo sourceInfo = method.getSourceInfo();
               Jack.getSession()
                   .getReporter()
                   .report(
                       Severity.NON_FATAL,
                       new ObfuscationContextInfo(
-                          new ColumnAndLineLocation(
-                              new FileLocation(sourceInfo.getFileName()),
-                              sourceInfo.getStartLine()),
+                          method.getSourceInfo().getLocation(),
                           ProblemLevel.INFO,
                           e));
             }
